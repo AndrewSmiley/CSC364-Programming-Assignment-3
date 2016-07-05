@@ -39,15 +39,26 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
                 throw new NoSuchElementException("Index out of bounds");
             }
 
-            Node tmp = head;
-            for(int i = 0; i < index; i++){
-                tmp = tmp.next;
-            }
-            currentNode = tmp;
-            previousNode = tmp==null? null: tmp.prev;
-            this.index = index;
+//            Node tmp = head;
 
+
+//            previousNode = tmp==null? null: tmp.prev;
+            this.index = index;
+            currentNode = head;
+            for(int i = 0; i < index; i++){
+                currentNode= currentNode.next;
+            }
+
+            System.out.print("fuck");
         }
+
+//        public void resetNode(int i){
+//            Node tmp = head;
+//            for(int j = 0; j < index; j++){
+//                tmp = tmp.next;
+//            }
+//            currentNode = tmp;
+//        }
 
         @Override
         public String toString(){
@@ -68,16 +79,16 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
         @Override
         public boolean hasNext() {
             //i hate java so much...
-
-//            Node tmp = head;
-//            //just go grab the node
+//            resetNode(index);
+//            currentNode= head;
+            //just go grab the node
 //            for(int i = 0; i < this.index; i++){
-//                tmp = tmp.next;
+//                currentNode = currentNode.next;
 //
 //            }
 //            currentNode = tmp;
-//            return tmp.next != null;
 //            return currentNode.next != null;
+            return currentNode.next != null;
         }
 
         @Override
