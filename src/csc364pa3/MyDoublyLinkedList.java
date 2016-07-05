@@ -67,11 +67,29 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
         }
         @Override
         public boolean hasNext() {
-            return currentNode.next != null;
+            //i hate java so much...
+
+//            Node tmp = head;
+//            //just go grab the node
+//            for(int i = 0; i < this.index; i++){
+//                tmp = tmp.next;
+//
+//            }
+//            currentNode = tmp;
+//            return tmp.next != null;
+//            return currentNode.next != null;
         }
 
         @Override
         public E next() {
+            //i hate java so much...
+            Node tmp = head;
+            //just go grab the node
+            for(int i = 0; i < this.index; i++){
+                tmp = tmp.next;
+
+            }
+            currentNode = tmp;
             previousNode = currentNode;
             currentNode = currentNode.next;
             index++;
@@ -80,11 +98,28 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
         @Override
         public boolean hasPrevious() {
-            return currentNode.prev != null;
+            //i hate java so much...
+            Node tmp = head;
+            //just go grab the node
+            for(int i = 0; i < this.index; i++){
+                tmp = tmp.next;
+
+            }
+            currentNode = tmp;
+
+            return tmp.prev != null;
         }
 
         @Override
         public E previous() {
+            //i hate java so much...
+            Node tmp = head;
+            //just go grab the node
+            for(int i = 0; i < this.index; i++){
+                tmp = tmp.next;
+
+            }
+            currentNode = tmp;
             previousNode = currentNode;
             currentNode = currentNode.prev;
             index--;
@@ -129,15 +164,13 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
         @Override
         public void add(E e) {
 
-//            handle the edge cases
+            //handle the edge cases
             //if we're adding to the tail
             if(index == size) {
                 Node tmp = tail;
                 Node newTail = new Node(e, null, tmp);
                 tmp.next = newTail;
                 tail = newTail;
-//                currentNode.next = new Node(e, null, currentNode);
-//                tail = currentNode.next;
             }
             else if(index == 0) {
                 Node newHead = new Node(e, head, null);
@@ -146,8 +179,6 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
             } else {
                 //wires are getting crossed somewhere...
                 //going to just reset index here, probably a java issue
-//                currentNode = null;
-//                currentNode = head;
                 Node tmp = head;
                 for(int i =0; i < index-1; i++){
                     tmp = tmp.next;
@@ -160,41 +191,8 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
                     tmp.next.prev = newNode;
                 }
                 tmp.next = newNode;
-
-//                Node newNode = new Node(e, currentNode.next, currentNode);
-//                if(currentNode.next != null){
-//                    currentNode.next.prev = newNode;
-//                }
-//                currentNode.next = newNode;
             }
 
-
-//            if (currentNode == null){
-//                if (currentNode == head){
-//                    currentNode.next = new Node(e, head.next ,currentNode);
-//
-//                }
-//                if (currentNode == tail){
-//                    currentNode.next = new Node(e, null,currentNode);
-//                    tail = currentNode.next;
-//                }
-////                currentNode =
-//                head = head== null? currentNode: head;
-//                tail = tail==null ? currentNode: tail;
-//            }else{
-//                if(currentNode == tail){
-//                    currentNode.next = new Node(e, currentNode.next,currentNode);
-//                    tail = currentNode.next;
-//                }else{
-//                    currentNode.next = new Node(e, currentNode.next,currentNode);
-////                    currentNode.next.next.prev = currentNode.next;
-//                }
-
-
-
-//                if(currentNode.next.next == null){
-//                    tail = currentNode.next;
-//                }
 
             size++;
         }
@@ -307,17 +305,34 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
     @Override
     public boolean contains(E e) {
-        return false;
+        return indexOf(e) > -1;
+
     }
 
     @Override
     public E get(int index) {
-        return null;
+        Node tmp = head;
+        //just go grab the node
+        for(int i = 0; i < index; i++){
+            tmp = tmp.next;
+
+        }
+        return tmp.element;
     }
 
     @Override
     public int indexOf(E e) {
-        return 0;
+        Node tmp = head;
+        for(int i = 0; i < size; i++){
+            if(tmp.element.equals(e)){
+                return i;
+            }else{
+                tmp = tmp.next;
+            }
+        }
+        //should this be 0 indexed?
+        return -1;
+
     }
 
     @Override
@@ -327,11 +342,43 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
     @Override
     public E remove(int index) {
-        return null;
+        Node tmp = head;
+        //just go grab the node
+        for(int i = 0; i < index; i++){
+                tmp = tmp.next;
+
+        }
+        Node lower = tmp.prev;
+        Node upper = tmp.next;
+        //obviously we have the head then
+        if(lower==null){
+            head = upper;
+            head.prev = null;
+            return  tmp.element;
+        }
+        else if(upper == null){
+            tail = lower;
+            tail.next = null;
+            return tmp.element;
+        }else{
+            upper.prev = lower;
+            lower.next = upper;
+            return tmp.element;
+        }
     }
 
     @Override
     public Object set(int index, E e) {
-        return null;
+        //i have no idea what he's looking for here
+        Node tmp = head;
+        //just go grab the node
+        for(int i = 0; i < size; i++){
+            tmp = tmp.next;
+
+        }
+        E tmpElement = tmp.element;
+        tmp.element = e;
+        return tmpElement;
+
     }
 }
