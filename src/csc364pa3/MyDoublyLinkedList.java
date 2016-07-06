@@ -8,6 +8,8 @@ import java.util.NoSuchElementException;
 public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
     private Node head;
     private Node tail;
+
+
 //    private int size;
 
     public MyDoublyLinkedList() {
@@ -294,26 +296,7 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
             ListIterator<E> ltr = listIterator(index);
             ltr.add(e);
         }
-//        Node tmp = head;
-//        if(index > size){
-//            throw new IllegalStateException("We cannot insert an element here");
-//        }
-//
-//        if (size > 0) {
-//            for(int i = 0; i  < index; i++){
-//                tmp = tmp.next;
-//            }
-//            Node newNode = new Node(e, (tmp == null) ? null: tmp.next, tmp );
-//            if (tmp == null || tmp.next == null) {
-//                this.tail =newNode;
-//            }else{
-//                tmp.next.prev = newNode;
-//            }
-//            tmp.next = newNode;
-//        }else{
-//            this.head = new Node(e, null, null);
-//        }
-//        this.size++;
+
     }
 
     @Override
