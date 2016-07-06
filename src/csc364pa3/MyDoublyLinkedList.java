@@ -31,20 +31,27 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
     }
 
     class DLListIterator implements ListIterator<E>{
-        Node currentNode;
-        Node previousNode;
+        Node currentNode = null;
+        Node previousNode = null;
         int index;
         public DLListIterator(int index){
             if (index > size) {
                 throw new NoSuchElementException("Index out of bounds");
             }
+            currentNode =  null;
 
 //            Node tmp = head;
 
 
 //            previousNode = tmp==null? null: tmp.prev;
             this.index = index;
-            currentNode = head;
+
+            if(index == 0){
+                currentNode = head;
+                return;
+            }else{
+                currentNode = head;
+            }
             for(int i = 0; i < index; i++){
                 currentNode= currentNode.next;
             }
@@ -164,7 +171,7 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
                 currentNode = head;
             }
 
-
+            size--;
         }
 
         @Override
