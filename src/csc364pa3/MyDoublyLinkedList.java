@@ -10,10 +10,15 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
     private Node tail;
 
 
-//    private int size;
+    private int size;
 
     public MyDoublyLinkedList() {
-        size = 0;
+//        public DoublyLinkedList() {
+            head = new Node(null, null, null);
+            tail= new Node(null, null, null);
+            head.next = tail;
+            tail.prev = head;
+//        }
     }
     /**
      * this class keeps track of each element information
@@ -33,58 +38,31 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
     }
 
     class DLListIterator implements ListIterator<E>{
-        Node currentNode = null;
-        Node previousNode = null;
-        int index;
-        public DLListIterator(int index){
-            if (index > size) {
-                throw new NoSuchElementException("Index out of bounds");
-            }
-            currentNode =  null;
-
-//            Node tmp = head;
+//        Node currentNode = null;
+//        Node previousNode = null;
+//        int index;
+        private Node currentNode = head.next;  // the node that is returned by next()
+        private Node previousNode = null;      // the last node to be returned by prev() or next()
+        // reset to null upon intervening remove() or add()
+        private int index = 0;
 
 
-//            previousNode = tmp==null? null: tmp.prev;
-            this.index = index;
-
-            if(index == 0){
-                currentNode = head;
-                return;
-            }else{
-                currentNode = head;
-            }
-            for(int i = 0; i < index; i++){
-                currentNode= currentNode.next;
-            }
-
-            System.out.print("fuck");
-        }
-
-//        public void resetNode(int i){
-//            Node tmp = head;
-//            for(int j = 0; j < index; j++){
-//                tmp = tmp.next;
+//        @Override
+//        public String toString(){
+//            String str = "[";
+//            currentNode =head;
+//            while (hasNext()){
+//                if(currentNode.prev == null){
+//                    str = str+currentNode.element;
+//                }else{
+//                    str = str+", "+currentNode.element;
+//                }
+//                currentNode = currentNode.next;
 //            }
-//            currentNode = tmp;
+//
+//
+//            return str+", "+currentNode.element+"]";
 //        }
-
-        @Override
-        public String toString(){
-            String str = "[";
-            currentNode =head;
-            while (hasNext()){
-                if(currentNode.prev == null){
-                    str = str+currentNode.element;
-                }else{
-                    str = str+", "+currentNode.element;
-                }
-                currentNode = currentNode.next;
-            }
-
-
-            return str+", "+currentNode.element+"]";
-        }
         @Override
         public boolean hasNext() {
             //i hate java so much...
@@ -97,58 +75,39 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 //            }
 //            currentNode = tmp;
 //            return currentNode.next != null;
-            return currentNode.next != null;
+//            return currentNode.next != null;
+            return index < size;
         }
 
         @Override
         public E next() {
-            //i hate java so much...
-            Node tmp = head;
-            //just go grab the node
-            for(int i = 0; i < this.index; i++){
-                tmp = tmp.next;
-
-            }
-            currentNode = tmp;
+            if (!hasNext()) throw new NoSuchElementException();
             previousNode = currentNode;
+            E e = currentNode.element;
             currentNode = currentNode.next;
             index++;
-            return currentNode.element;
+            return e;
         }
 
         @Override
         public boolean hasPrevious() {
-            //i hate java so much...
-            Node tmp = head;
-            //just go grab the node
-            for(int i = 0; i < this.index; i++){
-                tmp = tmp.next;
-
-            }
-            currentNode = tmp;
-
-            return tmp.prev != null;
+            return index > 0;
         }
 
         @Override
         public E previous() {
-            //i hate java so much...
-            Node tmp = head;
-            //just go grab the node
-            for(int i = 0; i < this.index; i++){
-                tmp = tmp.next;
-
+            if (!hasPrevious()){
+                throw new NoSuchElementException();
             }
-            currentNode = tmp;
-            previousNode = currentNode;
             currentNode = currentNode.prev;
             index--;
+            previousNode= currentNode;
             return currentNode.element;
         }
 
         @Override
         public int nextIndex() {
-            return index+1;
+            return index;
         }
 
         @Override
@@ -158,32 +117,32 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
         @Override
         public void remove() {
-            //remove the current node
-            if(index == size){
-                Node tmpTail = currentNode.prev;
-                tmpTail.next= null;
-                tail = tmpTail;
-                currentNode = tail;
-
-            }
-            if(index == 0){
-                Node tmpHead = currentNode.next;
-                tmpHead.prev = null;
-                head = tmpHead;
-                currentNode = head;
-            }
-
+            if (previousNode == null) throw new IllegalStateException();
+            Node x = previousNode.prev;
+            Node y = previousNode.next;
+            x.next = y;
+            y.prev = x;
             size--;
+            if (currentNode == previousNode) {
+                currentNode = y;
+            }
+            else {
+                index--;
+                previousNode = null;
+            }
         }
 
         @Override
         public void set(E e) {
-            previousNode.element = e;
+            if (previousNode == null){
+                throw new IllegalStateException();
+            }
+            previousNode.element= e;
         }
 
         @Override
         public void add(E e) {
-
+/*
             //handle the edge cases
             //if we're adding to the tail
             if(index == size) {
@@ -215,6 +174,26 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
 
             size++;
+        }*/
+
+//            Node x = currentNode.prev;
+            Node y = new Node(e, null, null);
+//            Node z = currentNode;
+            if(currentNode.prev != null){
+                currentNode.prev.next = y;
+            }
+            y.prev =currentNode.prev;
+            currentNode.prev = y;
+            y.next = currentNode;
+
+//            x.next = y;
+//            y.next = currentNode;
+//            z.prev = y;
+//            y.prev = currentNode.prev;
+            size++;
+            index++;
+            previousNode= null;
+
         }
     }
 
@@ -222,10 +201,10 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
      * Our to string function
      * @return
      */
-//    @Override
-    public String toString() {
-         return listIterator(0).toString();
-    }
+////    @Override
+//    public String toString() {
+//         return listIterator(0).toString();
+//    }
     @Override
     public E getFirst() {
         return head.element;
@@ -252,7 +231,7 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
     @Override
     public E removeFirst() {
-        if (this.head == null) {
+        if (this.head == null || size == 0) {
             throw new NoSuchElementException("The head is empty");
         }
         Node tmp = this.head.next;
@@ -267,7 +246,7 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
 
     @Override
     public E removeLast() {
-        if(this.tail == null)
+        if(this.tail == null || size == 0)
             throw new NoSuchElementException("The tail is empty");
         Node tmp = this.tail.prev;
         E returnValue = this.tail.element;
@@ -279,23 +258,44 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
         return returnValue;
     }
 
+//    public void add(E e){
+//
+//    }
+
     @Override
     public ListIterator<E> listIterator(int index) {
-        return new DLListIterator(index);
+        ListIterator itr = new DLListIterator();
+        for(int i = 0; i < index;i++){
+            itr.next();
+        }
+        return itr;
     }
 
     @Override
     public void add(int index, E e) {
-        if(head == null){
-            //assuming we're working from a new linked list
-            head = new Node(e, null, null);
-            tail = head;
-            size++;
+        if(index == 0){
+            Node newNode = new Node(e, head, null);
+            head.prev =head;
 
-        }else {
-            ListIterator<E> ltr = listIterator(index);
-            ltr.add(e);
+            head =
+            return
         }
+        listIterator(index).add(e);
+//        Node last = tail.prev;
+//        Node x = new Node(e, tail, last);
+//        tail.prev = x;
+//        last.next = x;
+//        size++;
+//        if(head == null){
+//            //assuming we're working from a new linked list
+//            head = new Node(e, null, null);
+//            tail = head;
+//            size++;
+//
+//        }else {
+//            ListIterator<E> ltr = listIterator(index);
+//            ltr.add(e);
+//        }
 
     }
 
@@ -368,6 +368,19 @@ public class MyDoublyLinkedList<E> extends  MyAbstractSequentialList<E> {
         }
     }
 
+
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("[");
+        if (size > 0) {
+            for (E item : this)
+                s.append(item + ", ");
+            s.replace(s.length()-2, s.length(), "");
+        }
+        s.append("]");
+        return s.toString();
+    }
     @Override
     public Object set(int index, E e) {
         //i have no idea what he's looking for here

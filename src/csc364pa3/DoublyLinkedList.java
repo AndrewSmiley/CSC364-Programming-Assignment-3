@@ -9,7 +9,7 @@ public class DoublyLinkedList<Item> implements Iterable<Item> {
     private Node post;    // sentinel after last item
 
     public DoublyLinkedList() {
-        pre = new Node();
+        pre  = new Node();
         post = new Node();
         pre.next = post;
         post.prev = pre;
@@ -22,13 +22,8 @@ public class DoublyLinkedList<Item> implements Iterable<Item> {
         private Node prev;
     }
 
-    public boolean isEmpty() {
-        return n == 0;
-    }
-
-    public int size() {
-        return n;
-    }
+    public boolean isEmpty()    { return n == 0; }
+    public int size()           { return n;      }
 
     // add the item to the list
     public void add(Item item) {
@@ -42,32 +37,19 @@ public class DoublyLinkedList<Item> implements Iterable<Item> {
         n++;
     }
 
-    public ListIterator<Item> iterator() {
-        return new DoublyLinkedListIterator();
-    }
+    public ListIterator<Item> iterator()  { return new DoublyLinkedListIterator(); }
 
     // assumes no calls to DoublyLinkedList.add() during iteration
     private class DoublyLinkedListIterator implements ListIterator<Item> {
-        private Node current = pre.next;  // the node that is returned by next()
+        private Node current      = pre.next;  // the node that is returned by next()
         private Node lastAccessed = null;      // the last node to be returned by prev() or next()
         // reset to null upon intervening remove() or add()
         private int index = 0;
 
-        public boolean hasNext() {
-            return index < n;
-        }
-
-        public boolean hasPrevious() {
-            return index > 0;
-        }
-
-        public int previousIndex() {
-            return index - 1;
-        }
-
-        public int nextIndex() {
-            return index;
-        }
+        public boolean hasNext()      { return index < n; }
+        public boolean hasPrevious()  { return index > 0; }
+        public int previousIndex()    { return index - 1; }
+        public int nextIndex()        { return index;     }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
